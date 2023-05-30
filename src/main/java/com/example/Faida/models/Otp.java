@@ -4,12 +4,14 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Date;
 
 @Document(collection = "otp")
 public class Otp {
+    private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
     @Id
     private String id;
 
@@ -28,11 +30,11 @@ public class Otp {
     } 
 
     public void hashOtp() {
-        this.otp = BCrypt.hashpw(this.otp, BCrypt.gensalt(8));
+        this.otp = encoder.encode(this.otp);
     }
 
     public boolean compareOtp(String otp) {
-        return BCrypt.checkpw(otp, this.otp);
+        return encoder.matches(otp, this.otp);
     }
 
     public User getOwner() {

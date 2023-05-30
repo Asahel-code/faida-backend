@@ -2,22 +2,37 @@ package com.example.Faida.services;
 
 import java.util.List;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.context.annotation.Configuration;
+import java.io.IOException;
 
 import com.africastalking.AfricasTalking;
 import com.africastalking.SmsService;
 import com.africastalking.sms.Recipient;
 
-import io.github.cdimascio.dotenv.Dotenv;
 
 @Configuration
 public class AfricasTalkingSmsService {
 
-    Dotenv dotenv = Dotenv.configure().load();
+    private Dotenv dotenv;
 
-    private String username = dotenv.get("AT_USERNAME");
+    private String username;
 
-    private String apiKey = dotenv.get("AT_APIKEY");
+    private String apiKey;
+
+    public AfricasTalkingSmsService() {
+        try {
+            init();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void init() throws IOException {
+        dotenv = Dotenv.configure().load();
+        username = dotenv.get("AT_USERNAME");
+        apiKey = dotenv.get("AT_APIKEY");
+    }
 
     public void sendSms(String phoneNumber, String message) {
         // Initialize the Africa's Talking service
@@ -28,7 +43,7 @@ public class AfricasTalkingSmsService {
 
         try {
             // Send the SMS
-            List<Recipient> response = smsService.send(message, new String[] {phoneNumber}, true);
+            List<Recipient> response = smsService.send(message, new String[] { phoneNumber }, true);
 
             System.out.println(response);
         } catch (Exception e) {
@@ -36,4 +51,3 @@ public class AfricasTalkingSmsService {
         }
     }
 }
-

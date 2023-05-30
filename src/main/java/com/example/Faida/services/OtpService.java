@@ -30,15 +30,21 @@ public class OtpService {
 
     public void saveOtp(Otp otp) {
         otp.hashOtp();
-        
+
         otpRepository.save(otp);
     }
 
+    public void deleteOtp(Otp otp) {
+        otpRepository.delete(otp);
+    }
+
     public boolean compareOtpWithCurrentUser(String otp, User currentUser) {
-        Otp currentOtp = otpRepository.findByOtp(otp);
-        return currentOtp != null && currentOtp.getOwner().getId().equals(currentUser.getId()) && currentOtp.compareOtp(otp);
+        Otp currentOtp = otpRepository.findByOwner(currentUser);
+        if (currentOtp != null) {
+            deleteOtp(currentOtp);
+            return true;
+        }
+        return false;
     }
 
 }
-
-
