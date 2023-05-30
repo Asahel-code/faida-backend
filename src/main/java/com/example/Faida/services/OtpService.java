@@ -35,7 +35,7 @@ public class OtpService {
     }
 
     public boolean compareOtpWithCurrentUser(String otp, User currentUser) {
-        Otp currentOtp = otpRepository.findByToken(otp);
+        Otp currentOtp = otpRepository.findByOtp(otp);
         return currentOtp != null && currentOtp.getOwner().getId().equals(currentUser.getId()) && currentOtp.compareOtp(otp);
     }
 

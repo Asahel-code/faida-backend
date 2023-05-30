@@ -7,6 +7,6 @@ import com.example.Faida.models.Otp;
 
 @Repository
 public interface OtpRepository extends MongoRepository<Otp, String> {
-    Otp findByToken(String otp);
+    Otp findByOtp(String otp);
 }
 

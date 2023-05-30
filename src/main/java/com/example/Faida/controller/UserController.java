@@ -11,21 +11,18 @@ import com.example.Faida.services.AfricasTalkingSmsService;
 import com.example.Faida.services.OtpService;
 import com.example.Faida.services.UserService;
 import com.example.Faida.services.JwtTokenService;
-import com.example.Faida.repository.UserRepository;
 import com.example.Faida.response.JwtAuthenticationResponse;
 
 @Controller
 @RequestMapping("/api/users")
 public class UserController {
-    private final UserRepository userRepository;
     private final UserService userService;
     private final AfricasTalkingSmsService smsService; 
     private final OtpService otpService;
     private final JwtTokenService tokenService;
     
 
-    public UserController(UserRepository userRepository, UserService userService, AfricasTalkingSmsService smsService, OtpService otpService, JwtTokenService tokenService) {
-        this.userRepository = userRepository;
+    public UserController(UserService userService, AfricasTalkingSmsService smsService, OtpService otpService, JwtTokenService tokenService) {
         this.userService = userService;
         this.smsService = smsService;
         this.otpService = otpService;
@@ -37,30 +34,29 @@ public class UserController {
         String phoneNumber = request.get("phoneNumber");
 
         // Retrieve user by phone number
-        Optional<User> userOptional = userRepository.findByPhoneNumber(phoneNumber);
-        if (userOptional.isEmpty()) {
-            return ResponseEntity.badRequest().body("Invalid phone number");
-        }
-
-        User user = userOptional.get();
+        try {
+            User user = userService.getUserByPhoneNumber(phoneNumber);
+            
+            if(user.getAccountStatus()){
+                String otp = otpService.generateOTP();
+    
+                Otp userOtp = new Otp(otp, user);
         
-        if(user.getAccountStatus()){
-            String otp = otpService.generateOTP();
+                smsService.sendSms(phoneNumber, otp);
+        
+                otpService.saveOtp(userOtp);
+                userService.saveUser(user);
+        
+                return ResponseEntity.ok("OTP sent successfully");
+            }
+            else{
+                return ResponseEntity.badRequest().body("Your account hasn't been activated");
+            }
 
-            Otp userOtp = new Otp(otp, user);
-    
-            smsService.sendSms(phoneNumber, otp);
-    
-            otpService.saveOtp(userOtp);
-            userService.saveUser(user);
-    
-            return ResponseEntity.ok("OTP sent successfully");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
-        else{
-            return ResponseEntity.badRequest().body("Your account hasn't been activated");
-        }
-
-       
+           
     }
 
     @PostMapping("/verify")
@@ -68,21 +64,19 @@ public class UserController {
         String phoneNumber = request.get("phoneNumber");
         String otp = request.get("otp");
 
-        // Retrieve user by phone number
-        Optional<User> userOptional = userRepository.findByPhoneNumber(phoneNumber);
-        if (userOptional.isEmpty()) {
-            return ResponseEntity.badRequest().body("Invalid phone number");
-        }
-
-        User currentUser = userOptional.get();
-
-        // Check if OTP matches
-        if (otpService.compareOtpWithCurrentUser(otp, currentUser)) {
-            String token = tokenService.generateToken(currentUser);
+        try {
+            User user = userService.getUserByPhoneNumber(phoneNumber);
+            // Check if OTP matches
+        if (otpService.compareOtpWithCurrentUser(otp, user)) {
+            String token = tokenService.generateToken(user);
 
             return ResponseEntity.ok(new JwtAuthenticationResponse(token));
         } else {
             return ResponseEntity.badRequest().body("Invalid OTP");
         }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
     }
 }
