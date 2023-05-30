@@ -27,20 +27,51 @@ Dashboard Administrator is a Spring Boot application that provides an administra
 
 1. Clone the repository:
 
-
+```bash
+git clone https://github.com/Asahel-code/faida-backend.git
+```
 
 2. Navigate to the project directory:
 
+```bash
+cd faida-backend
+``` 
 
 3. Build the project using Maven or Gradle:
 
+#### Maven
+```bash
+mvn compile
+```
 
-4. Run the application:
+#### Gradle
+```bash
+./gradlew build
+```
 
+4. Run the application using Maven, Gradle or docker:
 
-5. Access the dashboard:
+#### Maven 
+```bash
+mvn package
+```
 
-Open a web browser and go to `http://localhost:8080/dashboard`.
+#### Gradle
+```bash
+./gradlew bootRun
+```
+
+### Docker
+```bash
+docker build -t faida-backend .
+```
+```bash
+docker run -d --name mongodb -p 27017:27017 mongo
+```
+```bash
+docker run -d --name faida-backend-container --link mongodb:mongodb -p 8080:8080 faida-backend
+```
+
 
 ### Configuration
 
@@ -49,24 +80,7 @@ You can customize the application's behavior by modifying the configuration file
 - `application.properties`: Contains general application configuration properties.
 - `application.yml`: Alternative configuration file written in YAML format.
 
-### Security
+Also added some environment vairable in this directory in the `.env file`
 
-By default, the dashboard requires authentication to access. You can modify the security configuration in the `SecurityConfig` class located in the `src/main/java` directory to customize authentication and authorization rules.
 
-## Contributing
-
-Contributions are welcome! If you'd like to contribute to this project, please follow these steps:
-
-1. Fork the repository.
-2. Create a new branch for your feature or bug fix.
-3. Commit your changes and push the branch to your fork.
-4. Submit a pull request, explaining your changes and any additional information.
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
-
-## Contact
-
-If you have any questions or suggestions, please feel free to reach out to us at [your-email@example.com](mailto:your-email@example.com).
 
