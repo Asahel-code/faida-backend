@@ -1,20 +1,16 @@
-# Faida-Admin
+# Faida-Backend
 
-# Dashboard Administrator
-
-Dashboard Administrator is a Spring Boot application that provides an administration interface for managing a dashboard.
+Faida-Backend is a Spring Boot application that provide api end point for intergration to faida app and faida web dashboard.
 
 ## Features
 
-- Authentication: Users are required to authenticate before accessing the dashboard.
-- Simple Dashboard: Provides a basic dashboard with welcome message.
-- Security: Uses Spring Security for handling authentication and authorization.
+- Account creating api
+- Authentication api
 
 ## Technologies Used
 
 - Java
 - Spring Boot
-- Spring Security
 
 ## Getting Started
 
@@ -22,6 +18,8 @@ Dashboard Administrator is a Spring Boot application that provides an administra
 
 - Java 11 or higher
 - Maven or Gradle
+- Docker
+- Mongo DB
 
 ### Installation
 
@@ -79,8 +77,6 @@ You can customize the application's behavior by modifying the configuration file
 
 - `application.properties`: Contains general application configuration properties.
 - `application.yml`: Alternative configuration file written in YAML format.
-
-Also added some environment vairable in this directory in the `.env file`
 
 
 
