@@ -2,7 +2,7 @@ FROM openjdk:17
 
 WORKDIR /app
 
-COPY build/libs/*.jar app.jar
+COPY build/libs/Faida-Admin-0.0.1-SNAPSHOT.jar /app/app.jar
 
 EXPOSE 8080
 

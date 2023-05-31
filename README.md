@@ -6,6 +6,7 @@ Faida-Backend is a Spring Boot application that provide api end point for interg
 
 - Account creating api
 - Authentication api
+- Fetch all uses api
 
 ## Technologies Used
 
@@ -61,13 +62,7 @@ mvn package
 
 ### Docker
 ```bash
-docker build -t faida-backend .
-```
-```bash
-docker run -d --name mongodb -p 27017:27017 mongo
-```
-```bash
-docker run -d --name faida-backend-container --link mongodb:mongodb -p 8080:8080 faida-backend
+docker-compose up --build
 ```
 
 
