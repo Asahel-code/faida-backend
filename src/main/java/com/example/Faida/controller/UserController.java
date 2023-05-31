@@ -93,7 +93,7 @@ public class UserController {
             if (otpService.compareOtpWithCurrentUser(otp, user)) {
                 String token = tokenService.generateToken(user);
 
-                return ResponseEntity.ok(new JwtAuthenticationResponse(token));
+                return ResponseEntity.ok(new JwtAuthenticationResponse(token, user));
             } else {
                 return ResponseEntity.badRequest().body("Invalid OTP");
             }
