@@ -16,7 +16,7 @@ public class JwtAuthenticationResponse {
     }
 
     public String getUser() {
-        return user.getFirstName() + " " + user.getLastName();
+        return user.getFirstName();
     }
 
     public void setToken(String token) {
